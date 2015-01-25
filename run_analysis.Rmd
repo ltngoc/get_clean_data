@@ -1,0 +1,34 @@
+---
+title: "run_analysis"
+author: "Thuy Ngoc Le"
+date: "January 20, 2015"
+output: html_document
+---
+Load data
+```{r}
+read.table("UCI HAR Dataset//train/X_train.txt", as.is=T) -> X.train 
+read.table("UCI HAR Dataset//train/y_train.txt", as.is=T) -> y.train
+read.table("UCI HAR Dataset//test/X_test.txt", as.is=T) -> X.test
+read.table("UCI HAR Dataset//test/y_test.txt", as.is=T) -> y.test
+```
+
+
+Merge training and test data sets by:
+```{r}
+merge(X.train, X.test, all=T) -> X.merged
+```
+Load code book:
+```{r}
+read.table("UCI HAR Dataset//features.txt", sep=" ", as.is = T) -> code.book
+names(code.book) <- c("code", "feature")
+```
+
+To extract  mean and standard deviation variables, first need to look up codes for those variables (one way is by regular expressions):
+```{r}
+codes.of.mean <- grep(code.book$feature, pattern = "mean()")
+X.merged[ ,codes.of.mean] -> mean.ds
+codes.of.sd <- grep(code.book$feature, pattern = "std()")
+X.merged[ , codes.of.sd] -> std.ds
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
